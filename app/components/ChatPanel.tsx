@@ -14,6 +14,29 @@ interface ChatPanelProps {
   isGenerating: boolean;
 }
 
+const EXAMPLE_PROMPTS = [
+  {
+    title: 'Calendar with Weather',
+    prompt:
+      'A month view calendar interface where each day shows scheduled events and the weather forecast. Include navigation to switch months, and make days clickable to see details.',
+  },
+  {
+    title: 'Kanban Board',
+    prompt:
+      'A Kanban-style task board with columns for To Do, In Progress, and Done. Each task card should show title, description, priority tag, and assignee avatar. Make it look modern and clean.',
+  },
+  {
+    title: 'Analytics Dashboard',
+    prompt:
+      'A dashboard with stats cards showing key metrics (revenue, users, growth), a line chart for trends over time, and a recent activity feed. Use a professional dark theme.',
+  },
+  {
+    title: 'Music Player',
+    prompt:
+      'A music player interface with album art, song info, playback controls (play/pause, skip, shuffle, repeat), a progress bar, and volume slider. Make it sleek and modern.',
+  },
+];
+
 export default function ChatPanel({
   messages,
   onSend,
@@ -22,6 +45,12 @@ export default function ChatPanel({
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleExampleClick = (prompt: string) => {
+    if (!isGenerating) {
+      onSend(prompt);
+    }
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -53,8 +82,8 @@ export default function ChatPanel({
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4">
         {messages.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center text-center">
-            <div className="mb-4 rounded-full bg-zinc-800 p-4">
+          <div className="flex h-full flex-col items-center justify-center px-4">
+            <div className="mb-6 rounded-full bg-zinc-800 p-4">
               <svg
                 className="h-8 w-8 text-zinc-500"
                 fill="none"
@@ -65,16 +94,33 @@ export default function ChatPanel({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={1.5}
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
                 />
               </svg>
             </div>
-            <h3 className="mb-1 text-base font-medium text-zinc-300">
-              Start a conversation
+            <h3 className="mb-2 text-base font-medium text-zinc-300">
+              What would you like to build?
             </h3>
-            <p className="max-w-xs text-sm text-zinc-500">
-              Describe the React component you want to generate
+            <p className="mb-6 max-w-sm text-center text-sm text-zinc-500">
+              Describe a component or try one of these examples
             </p>
+            <div className="grid w-full max-w-md gap-2">
+              {EXAMPLE_PROMPTS.map((example) => (
+                <button
+                  key={example.title}
+                  onClick={() => handleExampleClick(example.prompt)}
+                  disabled={isGenerating}
+                  className="group rounded-lg border border-zinc-800 bg-zinc-900/50 px-4 py-3 text-left transition-all hover:border-zinc-700 hover:bg-zinc-800/50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <span className="block text-sm font-medium text-zinc-300 group-hover:text-zinc-100">
+                    {example.title}
+                  </span>
+                  <span className="mt-1 block text-xs text-zinc-500 line-clamp-2">
+                    {example.prompt}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="space-y-3">

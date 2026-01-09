@@ -4,6 +4,15 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import ChatPanel, { Message } from "./components/ChatPanel";
 import CodePreviewPanel from "./components/CodePreviewPanel";
 
+// Strip markdown code fences from generated code
+function stripCodeFences(code: string): string {
+  // Remove opening fence: ```tsx, ```typescript, ```jsx, ```javascript, or just ```
+  let stripped = code.replace(/^```(?:tsx?|jsx?|typescript|javascript)?\s*\n?/i, "");
+  // Remove closing fence: ```
+  stripped = stripped.replace(/\n?```\s*$/i, "");
+  return stripped;
+}
+
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [generatedCode, setGeneratedCode] = useState<string>("");
@@ -82,7 +91,7 @@ export default function Home() {
           if (done) break;
           const chunk = decoder.decode(value, { stream: true });
           fullCode += chunk;
-          setGeneratedCode(fullCode);
+          setGeneratedCode(stripCodeFences(fullCode));
         }
       }
 

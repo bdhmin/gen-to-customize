@@ -11,9 +11,11 @@ Rules:
 - Use TypeScript with proper types
 - Use Tailwind CSS for all styling
 - The component should be a default export named "GeneratedComponent"
-- Do not include any imports - assume React is in scope
+- Do not include any imports - assume React hooks (useState, useEffect, useRef, useMemo, useCallback, etc.) are already in scope and can be used directly
 - Make the component self-contained and visually appealing
 - Use modern React patterns (hooks, functional components)
+- IMPORTANT: Never use template literals (backticks with \${}) inside JSX attributes. Use string concatenation instead. For example, use key={"item-" + index} instead of key={\`item-\${index}\`}
+- IMPORTANT: Use hooks directly (useState, useEffect, etc.) - do NOT use React.useState or React.useEffect syntax
 
 Example output format:
 export default function GeneratedComponent() {
